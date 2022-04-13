@@ -9,8 +9,9 @@ import AuthBtn from '../components/auth/AuthBtn.vue'
     <q-header>
       <q-toolbar>
         vf3
+        <q-space />
+        <AuthBtn />
       </q-toolbar>
-      <AuthBtn align="right" />
     </q-header>
     <q-page-container>
       <router-view />

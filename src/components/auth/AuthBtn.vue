@@ -13,6 +13,7 @@ const provider = new GoogleAuthProvider()
     round
     color="info"
   >
+    <q-space />
     <q-avatar size="32px">
       <img :src="typeof firebaseUser.photoURL != null || ''">
       <q-menu>
@@ -56,13 +57,10 @@ const provider = new GoogleAuthProvider()
   </q-btn>
   <q-btn
     v-else
+    flat
     round
-    color="info"
+    dense
+    icon="group_add"
     @click="signInWithPopup(auth, provider)"
-  >
-    <q-avatar
-      icon="mdi-login"
-      size="24px"
-    />
-  </q-btn>
+  />
 </template>
