@@ -1,6 +1,9 @@
+// firebase 연결을 위한 기본 불러오는 파일
+
 import { initializeApp } from 'firebase/app'
 import firebaseConfig from '../../firebaseConfig'
 import { getAuth, connectAuthEmulator } from 'firebase/auth'
+import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore'
 
 initializeApp(firebaseConfig)
 
@@ -8,4 +11,7 @@ const auth = getAuth()
 auth.useDeviceLanguage()
 connectAuthEmulator(auth, 'http://localhost:9099')
 
-export { auth }
+const db = getFirestore()
+connectFirestoreEmulator(db, 'localhost', 8081)
+
+export { auth, db }
