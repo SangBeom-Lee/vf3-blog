@@ -1,18 +1,9 @@
 <script setup lang="ts">
-const linkWrite = () => {
-  location.href = '/write'
-}
+import PostList from 'src/components/PostList.vue'
 </script>
 <template>
   IndexView
-  <q-page>
-    <q-btn
-      flat
-      dense
-      icon="add"
-      @click="linkWrite"
-    >
-      write
-    </q-btn>
+  <q-page padding>
+    <PostList />
   </q-page>
 </template>

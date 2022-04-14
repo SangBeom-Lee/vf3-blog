@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { db } from 'src/boot/firebase'
 import { doc, setDoc } from 'firebase/firestore'
 import { useQuasar } from 'quasar'
+import { useRoute, useRouter } from 'vue-router'
 
 const $q = useQuasar()
 
@@ -10,23 +11,23 @@ const title = ref('')
 const content = ref('')
 
 const existsRule = (val: string) => (val && val.length > 0) || '내용을 넣어주세요.'
+const router = useRouter()
+const route = useRoute()
 
 const onSubmit = async () => {
-  try {
-    await setDoc(doc(db, 'posts', title.value), {
-      title: title.value,
-      content: content.value
-    })
-    $q.notify({
-      message: '게시글이 저장되었습니다.',
-      timeout: 0,
-      actions: [
-        { label: '확인', color: 'white', handler: () => { /* */ } }
-      ]
-    })
-  } catch (e) {
-    console.error(e)
-  }
+  await setDoc(doc(db, 'posts', title.value), {
+    title: title.value,
+    content: content.value
+  })
+  $q.notify({
+    message: '게시글이 저장되었습니다.',
+    timeout: 0,
+    actions: [
+      { label: '확인', color: 'white', handler: () => { /* */ } }
+    ]
+  })
+  const listPath = '/' + route.params.menu
+  await router.push(listPath)
 }
 
 const onReset = () => {
