@@ -2,6 +2,9 @@
 import { ref } from 'vue'
 import { db } from 'src/boot/firebase'
 import { doc, setDoc } from 'firebase/firestore'
+import { useQuasar } from 'quasar'
+
+const $q = useQuasar()
 
 const title = ref('')
 const content = ref('')
@@ -14,13 +17,19 @@ const onSubmit = async () => {
       title: title.value,
       content: content.value
     })
+    $q.notify({
+      message: '게시글이 저장되었습니다.',
+      timeout: 0,
+      actions: [
+        { label: '확인', color: 'white', handler: () => { /* */ } }
+      ]
+    })
   } catch (e) {
     console.error(e)
   }
 }
 
 const onReset = () => {
-  //
   title.value = ''
   content.value = ''
 }

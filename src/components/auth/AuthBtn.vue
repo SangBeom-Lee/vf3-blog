@@ -14,8 +14,13 @@ const provider = new GoogleAuthProvider()
     color="info"
   >
     <q-space />
-    <q-avatar size="32px">
-      <img :src="typeof firebaseUser.photoURL != null || ''">
+    <q-avatar
+      size="32px"
+    >
+      <img
+        float-left
+        :src="firebaseUser.photoURL || ''"
+      >
       <q-menu>
         <q-card>
           <q-list>
