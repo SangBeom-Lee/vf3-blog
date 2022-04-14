@@ -13,14 +13,8 @@ const provider = new GoogleAuthProvider()
     round
     color="info"
   >
-    <q-space />
-    <q-avatar
-      size="32px"
-    >
-      <img
-        float-left
-        :src="firebaseUser.photoURL || ''"
-      >
+    <q-avatar size="32px">
+      <q-img :src="firebaseUser?.photoURL || ''" />
       <q-menu>
         <q-card>
           <q-list>

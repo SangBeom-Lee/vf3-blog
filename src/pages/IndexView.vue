@@ -2,7 +2,6 @@
 import PostList from 'src/components/PostList.vue'
 </script>
 <template>
-  IndexView
   <q-page padding>
     <PostList />
   </q-page>
