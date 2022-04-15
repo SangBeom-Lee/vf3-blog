@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { DocumentData, QueryDocumentSnapshot } from '@google-cloud/firestore'
+import { QueryDocumentSnapshot } from '@google-cloud/firestore'
 import { defineProps, computed } from 'vue'
+import { Post } from 'src/models/Post'
 
 const props = defineProps<{
-  item: QueryDocumentSnapshot<DocumentData>
+  item: QueryDocumentSnapshot<Post>
 }>()
 const post = computed(() => props.item.data())
 </script>
@@ -16,6 +17,12 @@ const post = computed(() => props.item.data())
       <q-item-label>{{ post.title }}</q-item-label>
       <q-item-label caption>
         {{ post.content }}
+      </q-item-label>
+      <q-item-label caption>
+        {{ post.createdAt }}
+      </q-item-label>
+      <q-item-label caption>
+        {{ post.updatedAt }}
       </q-item-label>
     </q-item-section>
   </q-item>
