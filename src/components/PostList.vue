@@ -26,6 +26,7 @@ onMounted(() => getData())
       v-for="item in items"
       :key="item.id"
       :item="item"
+      @reload="getData"
     />
   </q-list>
 

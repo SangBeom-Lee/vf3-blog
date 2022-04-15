@@ -1,9 +1,12 @@
 import {
   FirestoreDataConverter,
   Timestamp,
+  SetOptions,
   doc,
   setDoc,
-  collection, query, getDocs
+  collection, query, getDocs,
+  deleteDoc,
+  serverTimestamp
 } from 'firebase/firestore'
 import { db } from 'src/boot/firebase'
 
@@ -18,7 +21,10 @@ export class Post {
 }
 
 const convertor: FirestoreDataConverter<Post> = {
-  toFirestore (model: Post) {
+  toFirestore (model: Post, options?: SetOptions) {
+    if (options) {
+      return Object.assign(model, { updatedAt: serverTimestamp() })
+    }
     return {
       title: model.title,
       content: model.content,
@@ -37,15 +43,31 @@ const convertor: FirestoreDataConverter<Post> = {
   }
 }
 
+// get post data
+export const getPosts = () => {
+  const ref = collection(db, 'posts').withConverter(convertor)
+  const q = query(ref)
+  return getDocs(q)
+}
+
 // save post
 export const setPost = (post: Post) => {
   const ref = doc(db, 'posts', post.title).withConverter(convertor)
   return setDoc(ref, post)
 }
 
-// get post data
-export const getPosts = () => {
-  const ref = collection(db, 'posts').withConverter(convertor)
-  const q = query(ref)
-  return getDocs(q)
+// update post
+export const updatePost = (id: string, content: string) => {
+  const ref = doc(db, 'posts', id).withConverter(convertor)
+  return setDoc(ref, {
+    content
+  }, {
+    merge: true
+  })
+}
+
+// delte post
+export const deletePost = (id: string) => {
+  const ref = doc(db, 'posts', id)
+  return deleteDoc(ref)
 }
