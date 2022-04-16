@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AuthBtn from '../components/auth/AuthBtn.vue'
+import MenuView from '../components/menu/MenuView.vue'
 
-const drawer = false
 </script>
 <template>
   <q-layout
@@ -10,15 +10,8 @@ const drawer = false
   >
     <q-header>
       <q-toolbar>
-        <q-btn
-          flat
-          round
-          dense
-          icon="menu"
-          class="q-mr-sm"
-          @click="drawer != drawer"
-        />
-        vf3
+        <MenuView />
+        Beom-dev
         <q-space />
         <AuthBtn />
       </q-toolbar>
