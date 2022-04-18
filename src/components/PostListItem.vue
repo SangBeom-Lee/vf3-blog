@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { QueryDocumentSnapshot } from '@google-cloud/firestore'
+import { QueryDocumentSnapshot } from 'firebase/firestore'
 import { defineProps, computed, ref, defineEmits } from 'vue'
 import { Post, updatePost, deletePost } from 'src/models/Post'
 

@@ -19,7 +19,7 @@ const converter: FirestoreDataConverter<User> = {
       displayName: model.displayName,
       photoURL: model.photoURL,
       createdAt: FieldValue.serverTimestamp()
-     }
+    }
   },
   fromFirestore (snapshot): User {
     const data = snapshot.data()
@@ -36,7 +36,7 @@ export const createUser = (userRecord: UserRecord) => {
   if (!userRecord.email) throw Error('invalid Email')
 
   const hash = createHash('md5').update(userRecord.uid).digest('hex')
-  const photoURL = userRecord.photoURL || `https://www.gravattar.com/avatar/${hash}`
+  const photoURL = userRecord.photoURL || `https://www.gravatar.com/avatar/${hash}`
   const user = new User(
     userRecord.email,
     userRecord.displayName || '',

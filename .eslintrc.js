@@ -102,9 +102,7 @@ module.exports = {
 
     // allow debugger during development only
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-
-    // temp
-    "indent": "off",
-    "@typescript-esling/indent": ["error", 2]
+    "no-useless-constructor": "off",
+    "@typescript-eslint/no-useless-constructor": ["error", 2]
   }
 }
