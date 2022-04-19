@@ -101,8 +101,6 @@ module.exports = {
     'no-unused-vars': 'off',
 
     // allow debugger during development only
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    "no-useless-constructor": "off",
-    "@typescript-eslint/no-useless-constructor": ["error", 2]
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
   }
 }

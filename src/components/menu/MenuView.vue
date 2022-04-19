@@ -6,48 +6,43 @@ const toggleLeftDrawer = function () {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
 
-const menuList = [
-  {
-    icon: 'mdi-clipboard-check',
-    label: 'Post',
-    separator: true
-  }
+const links1 = [
+  { icon: 'home', text: 'Home', to: '/' },
+  { icon: 'whatshot', text: 'Board', to: '/post' },
+  { icon: 'subscriptions', text: 'Movie Search', to: '/movie' }
 ]
 
 </script>
 <template>
-  <q-btn
-    dense
-    flat
-    round
-    icon="menu"
-    @click="toggleLeftDrawer"
-  />
   <q-drawer
     v-model="leftDrawerOpen"
     side="left"
     behavior="mobile"
     elevated
   >
-    <q-scroll-area>
-      <q-list
-        v-for="(menu, index) in menuList"
-        :key="index"
-      >
+    <q-scroll-area class="fit">
+      <q-list padding>
         <q-item
+          v-for="link in links1"
+          :key="link.text"
           v-ripple
           clickable
         >
-          <q-item-section avatar>
-            <q-icon name="inbox" />
+          <q-item-section
+            avatar
+            to="{{ link.to }}"
+          >
+            <q-icon
+              color="grey"
+              :name="link.icon"
+            />
           </q-item-section>
-
           <q-item-section>
-            Inbox
+            <q-item-label>{{ link.text }}</q-item-label>
           </q-item-section>
         </q-item>
+        <!-- drawer content -->
       </q-list>
     </q-scroll-area>
-    <!-- drawer content -->
   </q-drawer>
 </template>
