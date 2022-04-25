@@ -3,6 +3,9 @@ import { ref } from 'vue'
 import { useQuasar } from 'quasar'
 import { useRoute, useRouter } from 'vue-router'
 import { Post, setPost } from 'src/models/Post'
+import { doc } from 'firebase/firestore'
+import { db } from 'boot/firebase'
+import { firebaseUser } from 'src/composables/useAuth'
 
 const $q = useQuasar()
 
@@ -14,7 +17,9 @@ const router = useRouter()
 const route = useRoute()
 
 const onSubmit = async () => {
-  await setPost(new Post(title.value, content.value))
+  if (!firebaseUser.value) throw Error('user not signed')
+  const userRef = doc(db, 'user', firebaseUser.value.uid)
+  await setPost(new Post(title.value, content.value, userRef))
   $q.notify({
     message: '게시글이 저장되었습니다.',
     timeout: 0,

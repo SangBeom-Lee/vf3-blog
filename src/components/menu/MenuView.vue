@@ -2,9 +2,6 @@
 import { ref } from 'vue'
 
 const leftDrawerOpen = ref(false)
-const toggleLeftDrawer = function () {
-  leftDrawerOpen.value = !leftDrawerOpen.value
-}
 
 const links1 = [
   { icon: 'home', text: 'Home', to: '/' },
