@@ -3,7 +3,9 @@ import { } from 'vue'
 import { auth } from 'boot/firebase'
 import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth'
 import { firebaseUser, useAuth } from 'src/composables/useAuth'
-useAuth()
+
+const { initialize } = useAuth()
+initialize()
 
 const provider = new GoogleAuthProvider()
 </script>
