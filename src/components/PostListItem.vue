@@ -62,5 +62,11 @@ async function remove () {
         @click="remove"
       />
     </q-item-section>
+    <q-item-section side>
+      <q-btn
+        label="view"
+        :to="`/post/${item.id}`"
+      />
+    </q-item-section>
   </q-item>
 </template>
