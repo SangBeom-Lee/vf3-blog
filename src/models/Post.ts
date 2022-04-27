@@ -3,32 +3,35 @@ import {
   Timestamp,
   SetOptions,
   doc,
-  setDoc,
   collection, query, getDocs,
   deleteDoc,
   serverTimestamp,
   DocumentReference,
   DocumentSnapshot,
-  getDoc
+  getDoc,
+  writeBatch
 } from 'firebase/firestore'
 import { db } from 'src/boot/firebase'
 import { getUser, User } from './User'
+import { firebaseUser } from 'src/composables/useAuth'
+import { Content, converter as contentConverter, getContent } from './Content'
 
 export class Post {
   // eslint-disable-next-line no-useless-constructor
   constructor (
     readonly title: string,
-    readonly content: string,
+    readonly sumary: string,
     readonly userRef: DocumentReference,
     readonly createdAt?: Date | undefined,
     readonly updatedAt?: Date,
-    public userSnapshot?: DocumentSnapshot<User> | undefined
+    public userSnapshot?: DocumentSnapshot<User> | undefined,
+    public content?: string | undefined
   ) { }
 
   toJson () {
     return {
       title: this.title,
-      content: this.content,
+      sumary: this.sumary.substr(0, 10),
       userRef: this.userRef,
       createdAt: this.createdAt || serverTimestamp(),
       updatedAt: this.updatedAt || serverTimestamp()
@@ -36,14 +39,14 @@ export class Post {
   }
 
   // update post
-  updatePost (id: string, content: string) {
+  /* updatePost (id: string, content: string) {
     const ref = doc(db, 'posts', id).withConverter(convertor)
     return setDoc(ref, {
       content
     }, {
       merge: true
     })
-  }
+  } */
 
   // delte post
   deletePost (id: string) {
@@ -81,10 +84,32 @@ const titleToId = (text: string) => {
   return text.replace(patern, '').split(' ').join('-')
 }
 
+const contentsToChunks = (str: string) => {
+  return str.match(/.{1,10}/g) || []
+}
+
 // save post
-export const setPost = (post: Post) => {
-  const ref = doc(db, 'posts', titleToId(post.title)).withConverter(convertor)
-  return setDoc(ref, post)
+export const setPost = async (title: string, content: string) => {
+  if (!firebaseUser.value) throw Error('user not signed')
+  const batch = writeBatch(db)
+  const userRef = doc(db, 'user', firebaseUser.value.uid)
+  const id = titleToId(title)
+  const contents = contentsToChunks(content)
+  const postRef = doc(db, 'posts', id).withConverter(convertor)
+  const post = new Post(
+    title,
+    content,
+    userRef
+  )
+
+  batch.set(postRef, post)
+
+  contents.forEach((c, i) => {
+    const ref = doc(collection(db, 'posts', id, 'contents')).withConverter(contentConverter)
+    batch.set(ref, new Content(i, c))
+  })
+
+  return await batch.commit()
 }
 
 // get post data
@@ -107,5 +132,13 @@ export const getPosts = async () => {
 
 export const getPost = async (id: string) => {
   const ref = doc(db, 'posts', id).withConverter(convertor)
-  return getDoc(ref)
+  const postSnapshot = await getDoc(ref)
+  const post = postSnapshot.data()
+  if (!post) throw Error('post not exsits')
+
+  const contentSnapshot = await getContent(id)
+  const contents = contentSnapshot.docs.map(d => d.data().content)
+  post.content = contents.join('')
+
+  return post
 }
