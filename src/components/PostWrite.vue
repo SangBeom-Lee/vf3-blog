@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref, defineProps } from 'vue'
 import { useQuasar } from 'quasar'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { setPost, deletePost } from 'src/models/Post'
+import { useEditor, EditorContent } from '@tiptap/vue-3'
+import StarterKit from '@tiptap/starter-kit'
 
 const props = defineProps<{
   id: string,
@@ -16,13 +18,13 @@ const postContent = ref(props.content)
 
 const existsRule = (val: string) => (val && val.length > 0) || '내용을 넣어주세요.'
 const router = useRouter()
-const route = useRoute()
 
 const onSubmit = async () => {
   if (props.id) {
     if (props.title !== postTitle.value) await deletePost(props.id)
   }
-  const id = await setPost(postTitle.value, postContent.value)
+  const html = editor.value?.getHTML()
+  const id = await setPost(postTitle.value, html)
   $q.notify({
     message: '게시글이 저장되었습니다.',
     timeout: 0,
@@ -30,13 +32,24 @@ const onSubmit = async () => {
       { label: '확인', color: 'white', handler: () => { /* */ } }
     ]
   })
-  const listPath = '/' + route.params.menu
   await router.push(`/post/${id}`)
 }
 
 const onReset = () => {
   postTitle.value = ''
   postContent.value = ''
+}
+
+const editor = useEditor({
+  content: postContent.value,
+  extensions: [
+    StarterKit
+  ]
+})
+
+const test = () => {
+  const r = editor.value?.getHTML()
+  console.log(r)
 }
 
 </script>
@@ -58,7 +71,8 @@ const onReset = () => {
             :rules="[ existsRule ]"
           />
 
-          <q-input
+          <EditorContent :editor="editor" />
+          <!--<q-input
             v-model="postContent"
             filled
             type="textarea"
@@ -66,10 +80,14 @@ const onReset = () => {
             hint="내용을 넣어주세요."
             lazy-rules
             :rules="[ existsRule ]"
-          />
+          />-->
         </q-card-section>
         <q-card-actions>
           <div>
+            <q-btn
+              label="test"
+              @click="test"
+            />
             <q-btn
               label="Submit"
               type="submit"
