@@ -85,7 +85,7 @@ const titleToId = (text: string) => {
 }
 
 const contentsToChunks = (str: string) => {
-  return str.match(/.{1,10}/g) || []
+  return str.match(/.{1,100}/g) || []
 }
 
 // save post
@@ -104,12 +104,16 @@ export const setPost = async (title: string, content: string) => {
 
   batch.set(postRef, post)
 
+  const sn = await getContent(id)
+  sn.docs.forEach(d => batch.delete(d.ref))
+
   contents.forEach((c, i) => {
     const ref = doc(collection(db, 'posts', id, 'contents')).withConverter(contentConverter)
     batch.set(ref, new Content(i, c))
   })
 
-  return await batch.commit()
+  await batch.commit()
+  return id
 }
 
 // get post data
@@ -141,4 +145,14 @@ export const getPost = async (id: string) => {
   post.content = contents.join('')
 
   return post
+}
+
+// 게시물 삭제
+export const deletePost = async (id: string) => {
+  const batch = writeBatch(db)
+  const sn = await getContent(id)
+  sn.docs.forEach(d => batch.delete(d.ref))
+  batch.delete(doc(db, 'posts', id))
+
+  return await batch.commit()
 }

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { QueryDocumentSnapshot } from 'firebase/firestore'
-import { defineProps, computed, ref, defineEmits } from 'vue'
-import { Post } from 'src/models/Post'
+import { defineProps, computed, defineEmits } from 'vue'
+import { Post, deletePost } from 'src/models/Post'
 
 const props = defineProps<{
   item: QueryDocumentSnapshot<Post>
@@ -11,15 +11,9 @@ const emit = defineEmits<{(e: 'reload'): void}>()
 
 const post = computed(() => props.item.data())
 const user = computed(() => post.value.userSnapshot?.data())
-const content = ref(post.value.content)
-
-async function update () {
-  await post.value.updatePost(props.item.id, content.value)
-  emit('reload')
-}
 
 async function remove () {
-  await post.value.deletePost(props.item.id)
+  await deletePost(props.item.id)
   emit('reload')
 }
 
@@ -46,15 +40,6 @@ async function remove () {
       <q-item-label caption>
         {{ user.email }}
       </q-item-label>
-    </q-item-section>
-    <q-item-section>
-      <q-input v-model="content" />
-    </q-item-section>
-    <q-item-section side>
-      <q-btn
-        label="update"
-        @click="update"
-      />
     </q-item-section>
     <q-item-section side>
       <q-btn

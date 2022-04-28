@@ -33,6 +33,10 @@ onMounted(() => {
         to="/post"
         label="list"
       />
+      <q-btn
+        :to="`/post/update/${id}`"
+        label="modify"
+      />
     </q-card-actions>
   </q-card>
 </template>
